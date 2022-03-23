@@ -57,38 +57,41 @@ def main():
     #print(result)
 
     user = {
-        "first_name": "Sven",
-        "last_name": "Svensson",
+        "first_name": "Petronella",
+        "last_name": "Petterson",
         "phone_numbers": ["55323435", "23453645432"],
         "address": {
-            "street_address": "Storgatan 17",
-            "zip_code": "543 21",
-            "city": "Storstan"
+            "street_address": "LångtbortIStan",
+            "zip_code": "420 69",
+            "city": "Mora"
         }
     }
 
-    product_dict = {
-        'name': 'Ball',
-        'price': 3.45
-    }
+    product_dict = [
+        {
+            'name': 'Ball',
+            'price': 3.45
+        },
+        {
+            'name': 'Car',
+            'price': 420.69
+        }
+    ]
 
+    # TODO: Create This method
+    Product.insert_many(product_dict)
 
-    #new_user = Person(user)
-    #new_user.save()
+    Person.delete(last_name='Svensson')
 
-    #k is key like PrimaryKey, v is the value connected to the key.
-    #result = '\n'.join(f'{k} = {v}' for k, v in user.items())
-    #print(result)
+    person = Person.find(age=34).first_or_none()
 
-    #person = Person(user)
-    #person.save()
-    #print(person)
+    # Överkurs
+    if person:
+        # TODO: Create this method
+        # hint: db.collection.update_once({'_id': id}, {"$unset": {field: ""}})
+        person.delete_field('age')
 
-
-    #result = Person.all()
-    #print()
-    #print(result)
-    #print()
+    ###########################
 
     terje = Person.find(first_name='Vice').first_or_none()
     print(terje)
@@ -97,14 +100,7 @@ def main():
 
     terje = Person.find(first_name='Terje').first_or_none()
     print(terje)
-
-    #people = Person.find(first_name='Terje')
-    #people(person)
-
-    #result = [item for item in db.users.find()]
-    #result1 = [item for item in db.users.find()]
-    #result2 = [Person(item) for item in db.users.find()]
-
+    print()
 
 if __name__ == '__main__':
     main()
