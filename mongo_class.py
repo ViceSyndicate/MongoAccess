@@ -30,6 +30,9 @@ class Document(ABC):
         else:
             self.collection.replace_one({'_id': self._id}, self.__dict__)
 
+    def delete(self):
+        self.collection.delete_one(self.__dict__)
+
     # Classmethod is needed for cls to work I think...
     @classmethod
     def all(cls):
@@ -79,27 +82,31 @@ def main():
     ]
 
     # TODO: Create This method
-    Product.insert_many(product_dict)
+    # Product.insert_many(product_dict)
+    new_user = Person(user)
+    #Person.save(new_user)
+    get_user = Person.find(last_name='Petterson').first_or_none()
+    print(get_user)
+    Person.delete(get_user)
 
-    Person.delete(last_name='Svensson')
-
-    person = Person.find(age=34).first_or_none()
+    #person = Person.find(age=34).first_or_none()
 
     # Överkurs
-    if person:
+    #if person:
         # TODO: Create this method
         # hint: db.collection.update_once({'_id': id}, {"$unset": {field: ""}})
-        person.delete_field('age')
+        #person.delete_field('age')
 
     ###########################
 
-    terje = Person.find(first_name='Vice').first_or_none()
-    print(terje)
-    terje.first_name = 'Terje'
-    terje.save()
+#    terje = Person.find(first_name='Vice').first_or_none()
+#    print(terje)
+#    terje.first_name = 'Terje'
+#    terje.save()
 
-    terje = Person.find(first_name='Terje').first_or_none()
-    print(terje)
+#    terje = Person.find(first_name='Terje').first_or_none()
+#    print(terje)
+#    print()
     print()
 
 if __name__ == '__main__':
