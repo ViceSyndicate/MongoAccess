@@ -1,3 +1,4 @@
+import random
 from abc import ABC
 from pymongo import MongoClient
 
@@ -33,6 +34,16 @@ class Document(ABC):
     def delete(self):
         self.collection.delete_one(self.__dict__)
 
+    #cls is used to get current sub-class
+    @classmethod
+    def save_many(cls, items):
+        for item in items:
+            cls(item).save()
+
+    @classmethod
+    def delete_many(cls, **kwargs):
+        cls.collection.delete_many(kwargs)
+
     # Classmethod is needed for cls to work I think...
     @classmethod
     def all(cls):
@@ -43,6 +54,9 @@ class Document(ABC):
     @classmethod
     def find(cls, **kwargs):
         return ResultList(cls(item) for item in cls.collection.find(kwargs))
+
+    def delete_field(self, field):
+        self.collection.update_one({'_id': self._id}, {"$unset": {field: ""}})
 
 class Person(Document):
     # To specify which collection to store in.
@@ -61,13 +75,14 @@ def main():
 
     user = {
         "first_name": "Petronella",
-        "last_name": "Petterson",
+        "last_name": "Karlsson",
         "phone_numbers": ["55323435", "23453645432"],
         "address": {
             "street_address": "LångtbortIStan",
             "zip_code": "420 69",
             "city": "Mora"
-        }
+        },
+        "age": "44"
     }
 
     product_dict = [
@@ -83,19 +98,20 @@ def main():
 
     # TODO: Create This method
     # Product.insert_many(product_dict)
-    new_user = Person(user)
+    #new_user = Person(user)
     #Person.save(new_user)
-    get_user = Person.find(last_name='Petterson').first_or_none()
-    print(get_user)
-    Person.delete(get_user)
+    #get_user = Person.find(last_name='Petterson').first_or_none()
+    #Person.delete(get_user)
 
-    #person = Person.find(age=34).first_or_none()
+    first_names = ['Alice', 'Bob', 'Carl', 'Dina', 'Erik', 'Frida', 'Gunnar']
+    last_names = ['Andersson', 'Bengtsson' 'Carlsson', 'Danielsson', 'Eriksson', 'Fredriksson', 'Goransson']
 
-    # Överkurs
-    #if person:
-        # TODO: Create this method
-        # hint: db.collection.update_once({'_id': id}, {"$unset": {field: ""}})
-        #person.delete_field('age')
+    for _ in range(10):
+        user['first_name'] = random.choice(first_names)
+        user['last_name'] = random.choice(last_names)
+
+    Person(user).save()
+    #Person.delete_many(last_name='Svensson')
 
     ###########################
 
